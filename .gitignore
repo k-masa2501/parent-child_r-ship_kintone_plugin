@@ -1,0 +1,4 @@
+node_modules
+.vs
+public/js
+public/*.ppk

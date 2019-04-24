@@ -1,0 +1,72 @@
+<form id="settingForm">
+    <div class="block">
+        <div class="kintoneplugin-cfg-input">
+            <label class="kintoneplugin-cfg-input-label">フィールド名</label>
+            <span class="kintoneplugin-cfg-require">*</span>
+            <div class="kintoneplugin-input-outer">
+                <input type="text" v-model="fieldName" required>
+            </div>
+            <span class="kintoneplugin-cfg-require">{{_errorMsg.fieldName}}</span>
+        </div>
+        <div class="kintoneplugin-cfg-input">
+            <label class="kintoneplugin-cfg-input-label">スペースフィールド名</label>
+            <span class="kintoneplugin-cfg-require">*</span>
+            <div class="kintoneplugin-input-outer">
+                <input type="text" v-model="spaceId" required>
+            </div>
+            <span class="kintoneplugin-cfg-require">{{_errorMsg.spaceId}}</span>
+        </div>
+        <div class="kintoneplugin-cfg-input">
+            <label class="kintoneplugin-cfg-input-label">親レコード番号フィールド名</label>
+            <span class="kintoneplugin-cfg-require">*</span>
+            <div class="kintoneplugin-input-outer">
+                <input type="text" v-model="parentId" required>
+            </div>
+            <span class="kintoneplugin-cfg-require">{{_errorMsg.parentId}}</span>
+        </div>
+        <div class="kintoneplugin-cfg-input">
+            <label class="kintoneplugin-cfg-input-label">親レコード一覧表示形式</label>
+            <span class="kintoneplugin-cfg-require">*</span>
+            <div id="div-colum-list-block" class="div-colum-list-block">
+                <ul id="kintoneplugin-ul-colum-list">
+                    <li v-for="(item,index) in formItems" :key="index" class="plugin-toolitem-gaia" draggable="true" @dragstart="f_column_dragStart($event, item)">
+                        <span>{{item.label}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="margin-left: 300px;position: relative;padding: 0;background-color: #fff;">
+                <div style="position: relative;">
+                    <div id="div-colum-drop-block" class="div-colum-drop-block" @dragover.prevent @drop.prevent="f_column_drop($event)">
+                        <template  v-for="(elm, index) in columElement" :key="elm.item.code">
+                            <div class="div-table-form-block" v-bind:data-index="index" draggable="true" @dragstart="f_column_swapStart($event, index)" @dragover.prevent @drop.prevent="f_column_swapEnd($event, index)">
+                                <div class="div-table-overlay"></div>
+                                <div class="fm-control-menu-plugin-gaia">
+                                    <span class="fm-control-menu-plugin-btn-gaia" @mouseenter="f_menu_mouseenter($event)" @mouseleave="f_menu_mouseleave($event)"></span>
+                                    <div class="fm-control-menu-plugin-list-gaia" @click="f_rmBtn_click($event, index)" @mouseenter="f_rmBtn_mouseenter($event)" @mouseleave="f_menu_mouseleave($event)">
+                                        <a class="remove-image-plugin-gaia">削除</a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <table class="table-form-block">
+                                        </tbody>
+                                            <tr><th>{{elm.item.label}}</th></tr>
+                                            <tr><td>文字列</td></tr>
+                                            <tr><td>文字列</td></tr>
+                                            <tr><td>文字列</td></tr>
+                                            <tr><td>文字列</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <span class="kintoneplugin-cfg-require">{{_errorMsg.columElement}}</span>
+        </div>
+        <div class="kintoneplugin-cfg-input">
+                <button type="button" id="check-plugin-submit" class="kintoneplugin-button-dialog-ok" @click="f_button_dialog_ok($event)" >　保存する　</button>
+                <button type="button" id="check-plugin-cancel" class="kintoneplugin-button-dialog-cancel" @click="f_button_dialog_cancel($event)">　キャンセル　</button>
+            </div>
+    </div>
+</form>

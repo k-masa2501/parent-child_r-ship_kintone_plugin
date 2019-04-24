@@ -1,0 +1,36 @@
+{
+    "manifest_version": 1,
+    "version": 1,
+    "type": "APP",
+    "name": {
+        "ja": "親子関係付けプラグイン",
+        "en": "Parent-child relationship plug-in"
+    },
+    "description": {
+        "ja": "レコードに親子関係を関連付けするプラグインです。親子関係はレコード一覧として出力します。",
+        "en": "A plug-in that associates a parent-child relationship with a record. The parent-child relationship is output as a record list."
+    },
+    "icon": "image/icon.png",
+    "homepage_url": {},
+    "desktop": {
+        "js": [
+            "public/js/index.js",
+            "public/js/vendor.js"
+        ],
+        "css": []
+    },
+    "mobile": {
+        "js": []
+    },
+    "config": {
+        "html": "html/config.html",
+        "js": [
+            "public/js/config.js",
+            "public/js/vendor.js"
+        ],
+        "css": [],
+        "required_params": [
+            "fieldName", "spaceId", "parentId", "columElement"
+        ]
+    }
+}
