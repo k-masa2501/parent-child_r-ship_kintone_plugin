@@ -116,7 +116,7 @@
             config.parentId = this.parentId;
             
             for (var i=0, len=this.columElement.length;i<len;i++){
-              columElement.push({code: this.columElement[i].item.code, label: this.columElement[i].item.label});
+              columElement.push({code: this.columElement[i].item.code, label: this.columElement[i].item.label || this.columElement[i].item.code});
             }
 
             config.columElement = JSON.stringify(columElement);

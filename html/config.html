@@ -30,7 +30,7 @@
             <div id="div-colum-list-block" class="div-colum-list-block">
                 <ul id="kintoneplugin-ul-colum-list">
                     <li v-for="(item,index) in formItems" :key="index" class="plugin-toolitem-gaia" draggable="true" @dragstart="f_column_dragStart($event, item)">
-                        <span>{{item.label}}</span>
+                        <span>{{item.label || item.code}}</span>
                     </li>
                 </ul>
             </div>
@@ -49,7 +49,7 @@
                                 <div>
                                     <table class="table-form-block">
                                         </tbody>
-                                            <tr><th>{{elm.item.label}}</th></tr>
+                                            <tr><th>{{elm.item.label || elm.item.code}}</th></tr>
                                             <tr><td>文字列</td></tr>
                                             <tr><td>文字列</td></tr>
                                             <tr><td>文字列</td></tr>

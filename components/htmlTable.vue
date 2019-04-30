@@ -15,12 +15,12 @@
     </div>
     <table id="customizeVueTable">
         <thead>
-            <th v-bind:class="'recordlist-header-cell-plugin-gaia ' + 'expandTh' + index" v-for="(item, index) in _header" :key="index">
+            <th v-bind:id="'expandTh' + index" class="recordlist-header-cell-plugin-gaia" v-for="(item, index) in _header" :key="index">
                 <div style="position: relative;">
                     <div class="recordlist-header-cell-inner-plugin-gaia">
                         <span class="recordlist-header-label-plugin-gaia">{{item}}</span>
                     </div>
-                    <div><span class="recordlist-resizer-plugin-gaia" v-bind:data-class="'.expandTh' + index" @mousedown="f_mousedown"></span></div>
+                    <div><span class="recordlist-resizer-plugin-gaia" v-bind:data-id="'expandTh' + index" @mousedown="f_mousedown"></span></div>
                 </div>
             </th>
         </thead>
@@ -122,7 +122,6 @@
                     index: {}
                 },
                 cell: {
-                    clientX: 0,
                     className: null
                 }
 
@@ -346,8 +345,7 @@
             f_mousedown: function(ev){
                 ev.preventDefault();
 
-                this.cell.className = $(ev.currentTarget).attr("data-class");
-                this.cell.clientX = ev.pageX;
+                this.cell.className = $(ev.currentTarget).attr("data-id");
                 
                 window.addEventListener("mousemove", this.f_mousemove, false);
                 window.addEventListener("mouseup", this.f_mouseup, false);
@@ -356,11 +354,13 @@
             f_mousemove: function(ev){
                 if (0 < ev.pageX){
                     ev.preventDefault();
-                    const  territory = ev.pageX - this.cell.clientX;
-                    this.cell.clientX = ev.pageX;
-                    const elementWidth = $(this.cell.className).width();
-                    const width = elementWidth + territory;
-                    if (width > 30) $(this.cell.className).css({'width': `${width}px`}); 
+                    const element = document.getElementById(this.cell.className);
+                    if (element){
+                        const  width = ev.pageX - element.getBoundingClientRect().left;
+                        if (width > 30) {
+                            $('#'+this.cell.className).css({'width': `${width}px`});
+                        };
+                    }
                 }
             },
             f_mouseup: function(ev){
