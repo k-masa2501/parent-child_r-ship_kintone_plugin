@@ -92,9 +92,14 @@
             const swapIndex = this.dataTransfer().get();
             if ("number" === typeof swapIndex){
               const tmp1 = this.columElement[swapIndex];
-              const tmp2 = this.columElement[index];
-              this.columElement[index] = tmp1;
-              this.columElement[swapIndex] = tmp2;
+
+              if (swapIndex < index){
+                this.columElement.splice(index+1, 0, tmp1);
+                this.columElement.splice(swapIndex, 1);
+              }else{
+                this.columElement.splice(index, 0, tmp1);
+                this.columElement.splice(swapIndex+1, 1);
+              }
               this.$forceUpdate();
             }
           },
