@@ -1,6 +1,10 @@
 <template>
 <div>
-    <div>{{tableTitle}}</div>
+    <div>
+        <font size="4">
+            <b><span style="color: rgb(61, 133, 198);">{{tableTitle}}</span></b>
+        </font>    
+    </div>
     <div class="gaia-argoui-app-index-plugin-pager">
         <div class="gaia-argoui-app-index-pager-plugin-content">
             <div class="component-app-listtable-plugin-countitem">
@@ -202,7 +206,7 @@
                         var width = "";
                         for(var i=0,len=th.length;i<len;i++){
                             width = Number($(th[i]).width()) + 10;
-                            $(th[i]).css({'width':`${200 < width ? 200 : width}px`});
+                            $(th[i]).css({'width':`${300 < width ? 300 : width}px`});
                         }
                         $("#customizeVueTable").css({'table-layout':'fixed', 'width':'0px'});
 
