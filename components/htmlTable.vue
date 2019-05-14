@@ -19,7 +19,7 @@
     </div>
     <table id="customizeVueTable">
         <thead>
-            <th v-bind:id="'expandTh' + index" class="recordlist-header-cell-plugin-gaia" v-for="(item, index) in _header" :key="index">
+            <th v-bind:id="'expandTh' + index" class="recordlist-header-cell-plugin-gaia" v-for="(item, index) in headerLabel()" :key="index">
                 <div style="position: relative;">
                     <div class="recordlist-header-cell-inner-plugin-gaia">
                         <span class="recordlist-header-label-plugin-gaia">{{item}}</span>
@@ -113,7 +113,6 @@
         data: function () {
             return {
                 myRecords: [],
-                header: this.getHeader(),
                 tableTitle: config.fieldName,
                 apiVar:{
                     limit: 10,
@@ -134,22 +133,23 @@
         computed:{
             _body: function(){
                 const result1 = [];
-                const header = this.getHeader();
+                const header = this.headerCode();
                 for (var i1=0,len1=this.myRecords.length;i1<len1;i1++){
                     const result2 = [];
-
-                    const parentId = this.eventdata.record[config.parentId].value;
-                    const thisRcd = this.myRecords[i1].$id.value;
-                    const alink = function(name,style=""){return `<a href='${location.href.split("#")[0]}#record=${thisRcd}' class='${style}'>${name}(${thisRcd})</a>`};
-                    if (Number(parentId) === Number(thisRcd)){
-                        result2.push({type:'RECORD-LINK', value:alink("親","parent-num-style")});
-                    }else{
-                        result2.push({type:'RECORD-LINK', value:alink("子")});
-                    }
-
                     for (var i2=0,len2=header.length;i2<len2;i2++){
                         if (this.myRecords[i1].hasOwnProperty(header[i2])){
-                            result2.push(this.myRecords[i1][header[i2]]);
+                            if ("$id" === header[i2]){
+                                const parentId = this.eventdata.record[config.parentId].value;
+                                const thisRcd = this.myRecords[i1].$id.value;
+                                const alink = function(name,style=""){return `<a href='${location.href.split("#")[0]}#record=${thisRcd}' class='${style}'>${name}(${thisRcd})</a>`};
+                                if (Number(parentId) === Number(thisRcd)){
+                                    result2.push({type:'RECORD-LINK', value:alink("親","parent-num-style")});
+                                }else{
+                                    result2.push({type:'RECORD-LINK', value:alink("子")});
+                                }
+                            }else{
+                                result2.push(this.myRecords[i1][header[i2]]);
+                            }
                         }else{
                             result2.push({type:null, value:null});
                         }
@@ -161,19 +161,13 @@
                     if (b[0].value.match(/.*\>子\(.*/)) return +1;
                     return 0;
                 });
-            },
-            _header: function(){
-                const header = this.getHeader().slice();
-                header.unshift("親/子");
-                return header;
             }
         },
         // インスタンス生成後に実行
         created: function () {},
         mounted: function () {
 
-            const header = this.getHeader().slice();
-            header.unshift("$id");
+            const header = this.headerCode();
             const params = {
                 app: kintone.app.getId(),
                 fields: header,
@@ -184,6 +178,7 @@
             kintone.api(kintone.api.url("/k/v1/records", true), "GET", params).then(
                 (resp) => {
                     this.myRecords = resp.records;
+                    resp.totalCount = Number(resp.totalCount);
                     if (0 < resp.totalCount){
                         this.apiVar.firstCount = 1;
                         this.apiVar.lastCount = resp.records.length;
@@ -196,7 +191,7 @@
                             this.apiVar.nextOffset+this.apiVar.limit];
                     }
 
-                    if (this.apiVar.limit < resp.totalCount){
+                    if (this.apiVar.limit < this.apiVar.totalCount){
                         $(".gaia-ui-listtable-pagercomponent-plugin-next").css({"visibility": "visible"});
                     } 
 
@@ -223,8 +218,7 @@
 
                     this.apiVar.proc = false;
 
-                    const header = this.getHeader().slice();
-                    header.unshift("$id");
+                    const header = this.headerCode();
                     const params = {
                         app: kintone.app.getId(),
                         fields: header,
@@ -236,6 +230,7 @@
                         (resp) => {
 
                             this.myRecords = resp.records;
+                            resp.totalCount = Number(resp.totalCount);
 
                             if (resp.totalCount < this.apiVar.totalCount && 
                                 this.apiVar.lastCount > (resp.totalCount-1)){
@@ -245,7 +240,7 @@
                                 this.apiVar.lastCount += resp.records.length;
                                 this.apiVar.preOffset += this.apiVar.limit;
                                 this.apiVar.nextOffset += this.apiVar.limit;
-                                this.apiVar.totalCount = resp.totalCount;    
+                                this.apiVar.totalCount = resp.totalCount;
                                 this.apiVar.index[this.apiVar.preOffset] = 
                                     [this.apiVar.preOffset+this.apiVar.limit,
                                      new Array(this.apiVar.limit)
@@ -280,8 +275,7 @@
 
                     this.apiVar.proc = false;
 
-                    const header = this.getHeader().slice();
-                    header.unshift("$id");
+                    const header = this.headerCode();
                     const params = {
                         app: kintone.app.getId(),
                         fields: header,
@@ -293,7 +287,7 @@
                         (resp) => {
 
                             this.myRecords = resp.records;
-
+                            resp.totalCount = Number(resp.totalCount);
                             if (resp.totalCount < this.apiVar.totalCount && 
                                 this.apiVar.firstCount > (resp.totalCount-1)){
                                 this.pagingRecount();
@@ -302,7 +296,7 @@
                                 this.apiVar.firstCount -= this.apiVar.limit;
                                 this.apiVar.preOffset -= this.apiVar.limit;
                                 this.apiVar.nextOffset -= this.apiVar.limit;
-                                this.apiVar.totalCount = resp.totalCount; 
+                                this.apiVar.totalCount = resp.totalCount;
                             }
 
                             if (0 <= this.apiVar.preOffset) {
@@ -372,21 +366,29 @@
                 window.removeEventListener("mousemove", this.f_mousemove, false);
                 window.removeEventListener("mouseup", this.f_mouseup, false);
             },
-            getHeader: function(){
-                if (!this.header){
-                    const result = [];
-                    if (config && null != config.columElement) {
-                        const columElement = JSON.parse(config.columElement);
-                        if ("object" === typeof columElement) {
-                            for (var i=0,len=columElement.length;i<len;i++){                    
-                                result.push(columElement[i].code);
-                            }
+            headerCode: function(){
+                const result = ["$id"];
+                if (config && null != config.columElement) {
+                    const columElement = JSON.parse(config.columElement);
+                    if ("object" === typeof columElement) {
+                        for (var i=0,len=columElement.length;i<len;i++){                    
+                            result.push(columElement[i].code);
                         }
                     }
-                    return result;
-                }else{
-                    return this.header;
                 }
+                return result;
+            },
+            headerLabel: function(){
+                const header = ["親/子"];
+                if (config && null != config.columElement) {
+                    const columElement = JSON.parse(config.columElement);
+                    if ("object" === typeof columElement) {
+                        for (var i=0,len=columElement.length;i<len;i++){                    
+                            header.push(columElement[i].label);
+                        }
+                    }
+                }
+                return header;
             }
         }
     }
