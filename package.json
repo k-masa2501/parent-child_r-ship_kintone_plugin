@@ -7,7 +7,7 @@
         "lib": "lib"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "mocha-webpack --webpack-config webpack.config.js --require test/setup.js test/**/*.spec.js"
     },
     "author": "",
     "license": "ISC",
@@ -15,12 +15,18 @@
         "@babel/core": "^7.4.0",
         "@babel/preset-env": "^7.4.2",
         "@interactjs/types": "^1.4.0-alpha.20",
+        "@vue/test-utils": "^1.0.0-beta.29",
         "babel-loader": "^8.0.5",
+        "chai": "^4.2.0",
         "css-loader": "^2.1.1",
         "file-loader": "^3.0.1",
         "html-loader": "^0.5.5",
+        "jsdom": "^15.0.0",
+        "jsdom-global": "^3.0.2",
+        "kinstub": "^1.1.0",
+        "mocha": "^6.1.4",
+        "mocha-webpack": "^2.0.0-beta.0",
         "path": "^0.12.7",
-        "sortablejs": "^1.8.4",
         "style-loader": "^0.23.1",
         "vue-loader": "^15.7.0",
         "vue-template-compiler": "^2.6.10",
