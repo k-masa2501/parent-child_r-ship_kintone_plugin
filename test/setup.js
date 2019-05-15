@@ -26,3 +26,6 @@ global.kintone = kintone({
 });
 require('jsdom-global')();
 window.Date = Date;
+
+require('@babel/register')();
+require('@babel/polyfill');
