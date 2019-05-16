@@ -1,16 +1,31 @@
 {
     "name": "customize-html-table",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "",
     "main": "index.js",
     "directories": {
         "lib": "lib"
     },
     "scripts": {
-        "test": "mocha-webpack --webpack-config test/webpack.config.test.js --require test/setup.js test/**/*.spec.js"
+        "test": "nyc mocha-webpack --webpack-config test/webpack.config.test.js --require test/setup.js test/**/*.spec.js"
     },
     "author": "",
     "license": "ISC",
+    "nyc": {
+        "include": [
+            "js/*.js",
+            "components/*.vue"
+        ],
+        "exclude": [],
+        "reporter": [
+            "text-summary",
+            "lcov",
+            "cobertura"
+        ],
+        "cache": true,
+        "all": true,
+        "report-dir": "./test_report/coverage"
+    },
     "devDependencies": {
         "@babel/core": "^7.4.0",
         "@babel/polyfill": "^7.4.4",
@@ -28,6 +43,7 @@
         "kinstub": "^1.1.0",
         "mocha": "^6.1.4",
         "mocha-webpack": "^2.0.0-beta.0",
+        "nyc": "^14.1.1",
         "path": "^0.12.7",
         "style-loader": "^0.23.1",
         "vue-loader": "^15.7.0",
