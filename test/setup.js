@@ -1,6 +1,8 @@
 global.chai = require('chai');
 const  { shallowMount } = require('@vue/test-utils');
 global.shallowMount = shallowMount;
+const  { mount } = require('@vue/test-utils');
+global.mount = mount;
 const kintone = require("kinstub");
 global.kintone = kintone({
     "domain": process.env.KINTONE_DOMAIN,

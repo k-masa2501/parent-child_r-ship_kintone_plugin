@@ -52,11 +52,21 @@
 
         it('kintone.debugSetPluginId.',async function () { //comp.default
             const result = await kintone.api(kintone.api.url("/k/v1/record", true), "GET", { app: 6, id: kintone.app.record.getId() });
-            const wrapper = shallowMount(htmlTable.default, {
+            document.body.innerHTML = "<div id='user-js-parentList'><comp-test-vue-table :eventdata='eventData'></comp-test-vue-table></div>";
+            new Vue({
+                el: 'user-js-parentList',
+                components: {
+                    "comp-test-vue-table": htmlTable.default
+                },
+                data: {
+                    eventData: { record: result.record }
+                }
+            });
+            /*const wrapper = mount(htmlTable.default, {
                 propsData: {
                     eventdata: { record: result.record }
                 }
-            });
+            });*/
             //wrapper.find('.gaia-ui-listtable-pagercomponent-plugin-prev').trigger('click')
             //expect(wrapper.find('div').text()).toMatch('1')
         });
